@@ -201,6 +201,9 @@ class RecoveryPermissions(
      * 去掉之后一定会加回去,中途被取消也一样,免得把服务留在关着的状态;加回失败时写回原来的列表,仍报失败。不改 [RecoveryConsent]:这不是打开或收回能力。
      */
     suspend fun restartAccessibility(gapMs: Long): PermissionResult = lock.withLock {
+        // LAPIS-REVISION: perbaikan/penyambungan ulang aksesibilitas otomatis dinonaktifkan di fork ini.
+        return@withLock PermissionResult.Done
+        @Suppress("UNREACHABLE_CODE")
         val shell = runner() ?: return@withLock PermissionResult.NoRunner
         val me = PermissionCommands.accessibilityService(packageName)
         try {
@@ -244,7 +247,7 @@ class RecoveryPermissions(
 
     private suspend fun commands(shell: ShellCommandRunner, c: RecoveryCapability, on: Boolean): List<String> = when (c) {
         RecoveryCapability.RestoreAfterReboot, RecoveryCapability.AutoWirelessDebugging -> when {
-            on -> listOf(PermissionCommands.grantWriteSecureSettings(packageName))
+            on -> emptyList() // LAPIS-REVISION: fork ini tidak pernah memberi WRITE_SECURE_SETTINGS kepada dirinya sendiri
             // 另一项还要用这份授权:只记下关掉,不收回
             RecoveryCapability.entries.any { it != c && it.writesSecureSettings && store.consent.value.isApplied(it) } -> emptyList()
             else -> listOf(PermissionCommands.revokeWriteSecureSettings(packageName))
@@ -252,9 +255,9 @@ class RecoveryPermissions(
         RecoveryCapability.BatteryWhitelist ->
             listOf(if (on) PermissionCommands.whitelistAdd(packageName) else PermissionCommands.whitelistRemove(packageName))
         RecoveryCapability.Accessibility -> {
-            val current = shell.exec(PermissionCommands.READ_ACCESSIBILITY)
-            val me = PermissionCommands.accessibilityService(packageName)
-            PermissionCommands.writeAccessibility(if (on) AccessibilityList.with(current, me) else AccessibilityList.without(current, me))
+            // LAPIS-REVISION: pemulihan aksesibilitas otomatis dinonaktifkan di fork ini.
+            // Bila aksesibilitas dicabut, hanya pengguna yang dapat mengaktifkannya lagi dari Pengaturan.
+            emptyList()
         }
     }
 

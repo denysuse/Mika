@@ -6,7 +6,7 @@
     <!-- 按住说话时录音，转成文字。 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 用户在关于页下载新版后，交给系统安装器确认覆盖安装。 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- LAPIS-REVISION: REQUEST_INSTALL_PACKAGES dihapus; pembaruan hanya lewat unduhan manual dari halaman rilis. -->
     <!-- 沙箱联网时读当前网络的 DNS 服务器 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -27,9 +27,7 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission
-        android:name="android.permission.WRITE_SECURE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
+    <!-- LAPIS-REVISION: WRITE_SECURE_SETTINGS dihapus; fork ini tidak dapat diberi izin mengubah pengaturan aman. -->
 
     <!-- 对话页附件可以拍照(走系统相机),声明用到相机、但不是必需:没有相机的设备照常安装。
          有的系统按 APK 特征给应用分类,不声明时 Mika 可能被当成游戏、限制刷新率;这条声明要留着 -->
